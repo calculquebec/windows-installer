@@ -41,6 +41,7 @@ try:  # Python 3
     from urllib.request import urlopen as _urlopen
 except ImportError:  # Python 2
     from urllib2 import urlopen as _urlopen
+import ssl
 import zipfile
 
 
@@ -69,7 +70,7 @@ else:
 def download(url, sha1):
     """Download a file and verify its hash"""
     LOG.debug('download {}'.format(url))
-    r = _urlopen(url)
+    r = _urlopen(url, context=ssl._create_unverified_context())
     byte_content = r.read()
     download_sha1 = hashlib.sha1(byte_content).hexdigest()
     if download_sha1 != sha1:
